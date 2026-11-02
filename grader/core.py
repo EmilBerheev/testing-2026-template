@@ -197,7 +197,7 @@ def render_markdown(labs: list[LabResult], variant: str) -> str:
             out.append(f"| {name} | {r.points} / {r.max} | {status} | {hint} |")
     out.append("")
     out.append(
-        "Автоматическая часть — 60 баллов из 100, остальные 40 ставит преподаватель на защите."
+        "Автоматическая часть — 60 баллов из 100, остальные 40 ставит преподаватель при проверке репозитория."
     )
     return "\n".join(out) + "\n"
 
