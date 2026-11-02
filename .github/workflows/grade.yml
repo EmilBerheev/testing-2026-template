@@ -1,0 +1,71 @@
+# Автопроверка лабораторных. Запускается на каждый push и вручную (вкладка Actions).
+# Баллы — в сводке прогона (Summary) и в артефакте grade.json.
+# Этот файл и папку grader/ не меняйте: преподаватель может проверять работу своей копией
+# грейдера (переменная репозитория GRADER_REPO).
+name: Автопроверка
+
+on:
+  push:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: read
+
+concurrency:
+  group: grade-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  grade:
+    name: Баллы за лабораторные
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Код репозитория
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0 # нужны теги lab-N
+
+      - name: Грейдер преподавателя (если задан GRADER_REPO)
+        if: ${{ vars.GRADER_REPO != '' }}
+        uses: actions/checkout@v7
+        with:
+          repository: ${{ vars.GRADER_REPO }}
+          ref: ${{ vars.GRADER_REF || 'main' }}
+          token: ${{ secrets.GRADER_TOKEN || github.token }}
+          path: .teacher-grader
+
+      - name: Подменить локальный grader/ на грейдер преподавателя
+        if: ${{ vars.GRADER_REPO != '' }}
+        run: |
+          rm -rf grader
+          cp -r .teacher-grader/grader ./grader
+          rm -rf .teacher-grader
+
+      - name: Установить uv
+        uses: astral-sh/setup-uv@v10.3.3
+        with:
+          enable-cache: true
+
+      - name: Зависимости
+        run: uv sync
+
+      - name: Браузер для Playwright
+        run: uv run playwright install --with-deps chromium
+
+      - name: k6 (для проверки сценария нагрузки)
+        uses: grafana/setup-k6-action@v1
+
+      - name: Автопроверка всех лабораторных
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: uv run python -m grader all
+
+      - name: Сохранить grade.json
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: grade
+          path: grade.json
+          if-no-files-found: warn

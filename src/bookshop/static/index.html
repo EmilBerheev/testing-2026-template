@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Книжная лавка</title>
+  <link rel="stylesheet" href="/static/app.css">
+  <script src="/static/common.js" defer></script>
+  <script src="/static/catalog.js" defer></script>
+</head>
+<body>
+  <header class="top">
+    <h1>Книжная лавка</h1>
+    <p class="muted" data-testid="variant">Вариант …</p>
+  </header>
+
+  <main class="shop">
+    <section class="card" aria-labelledby="catalog-title">
+      <h2 id="catalog-title">Каталог</h2>
+      <div class="field">
+        <label for="search">Поиск по названию или автору</label>
+        <input id="search" type="search" autocomplete="off">
+      </div>
+      <div class="table-wrap">
+        <table data-testid="catalog">
+          <caption class="visually-hidden">Книги и остатки на складе</caption>
+          <thead>
+            <tr>
+              <th scope="col">Книга</th>
+              <th scope="col" class="num">Цена</th>
+              <th scope="col" class="num">На складе</th>
+              <th scope="col" class="num">Количество</th>
+            </tr>
+          </thead>
+          <tbody id="books"></tbody>
+        </table>
+      </div>
+      <p id="empty" class="muted" hidden>Ничего не нашлось. Попробуйте другое слово.</p>
+    </section>
+
+    <form id="order-form" class="card" novalidate aria-labelledby="checkout-title">
+      <h2 id="checkout-title">Оформление заказа</h2>
+      <div class="field">
+        <label for="name">Имя</label>
+        <input id="name" name="name" autocomplete="name">
+      </div>
+      <div class="field">
+        <label for="email">Электронная почта</label>
+        <input id="email" name="email" type="email" autocomplete="email">
+      </div>
+      <div class="field">
+        <label for="loyalty">Карта лояльности</label>
+        <select id="loyalty" name="loyalty">
+          <option value="none">Нет карты</option>
+          <option value="silver">Серебряная</option>
+          <option value="gold">Золотая</option>
+        </select>
+      </div>
+      <div class="field">
+        <span class="field-title">Промокод</span>
+        <input id="promo" name="promo" autocomplete="off">
+      </div>
+      <fieldset class="field">
+        <legend>Получение</legend>
+        <label class="choice"><input type="radio" name="delivery" value="pickup" checked> Самовывоз</label>
+        <label class="choice"><input type="radio" name="delivery" value="courier"> Курьер</label>
+      </fieldset>
+
+      <div class="actions">
+        <button type="button" id="quote-button" class="secondary">Рассчитать</button>
+        <button type="submit" id="order-button" class="primary">Оформить заказ</button>
+      </div>
+
+      <div id="error" class="error" role="alert" hidden></div>
+
+      <section id="summary" aria-labelledby="summary-title" hidden>
+        <h3 id="summary-title">Расчёт</h3>
+        <dl class="summary" data-testid="summary">
+          <dt>Экземпляров</dt><dd data-testid="items-count"></dd>
+          <dt>Сумма без скидки</dt><dd data-testid="subtotal"></dd>
+          <dt>Скидка, %</dt><dd data-testid="discount-percent"></dd>
+          <dt>Скидка</dt><dd data-testid="discount"></dd>
+          <dt>Доставка</dt><dd data-testid="delivery-cost"></dd>
+          <dt class="grand">К оплате</dt><dd class="grand" data-testid="total"></dd>
+        </dl>
+      </section>
+    </form>
+  </main>
+</body>
+</html>

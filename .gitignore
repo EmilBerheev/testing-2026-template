@@ -1,0 +1,29 @@
+# Python и uv
+.venv/
+__pycache__/
+*.py[cod]
+.ruff_cache/
+
+# Тесты и отчёты
+.pytest_cache/
+.hypothesis/
+.coverage
+.coverage.*
+coverage.xml
+coverage.json
+htmlcov/
+test-results/
+allure-results/
+allure-report/
+schemathesis-report/
+mutants/
+
+# Автопроверка
+.grader/
+grade.json
+
+# Редакторы и ОС
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db

@@ -1,0 +1,67 @@
+[project]
+name = "bookshop"
+version = "2026.1"
+description = "Книжная лавка — учебное приложение для лабораторных по тестированию ПО"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "fastapi>=0.160",
+    "uvicorn>=0.50",
+]
+
+[project.scripts]
+bookshop = "bookshop.__main__:main"
+
+[dependency-groups]
+dev = [
+    "pytest>=9.0",
+    "pytest-cov>=7.0",
+    "httpx>=0.28",
+    "hypothesis>=6.140",
+    "pytest-playwright>=0.7",
+    "schemathesis>=4.30",
+    "allure-pytest>=2.15",
+    "axe-playwright-python>=0.1.7",
+    "ruff>=0.17",
+    "pyyaml>=6.0",
+    # mutmut 3 не работает в Windows без WSL — ставится только в Linux и macOS (ЛР4, CI).
+    "mutmut>=3.8; sys_platform != 'win32'",
+]
+
+[build-system]
+requires = ["uv_build>=0.13,<0.14"]
+build-backend = "uv_build"
+
+[tool.pytest.ini_options]
+minversion = "9.0"
+testpaths = ["tests"]
+addopts = "-ra"
+xfail_strict = true
+filterwarnings = [
+    # Starlette 1.10 советует для TestClient пакет httpx2; в курсе используем httpx 0.28
+    "ignore:Using `httpx` with `starlette.testclient`:UserWarning",
+]
+markers = [
+    "tc(id): связь автотеста с тест-кейсом из docs/test-cases.yaml (ЛР2)",
+    "negative: негативная проверка — ожидаем отказ системы (ЛР3)",
+    "a11y: автоматическая проверка доступности (бонус ЛР4)",
+]
+
+[tool.coverage.run]
+source = ["bookshop"]
+branch = true
+omit = ["*/__main__.py"]
+
+[tool.coverage.report]
+show_missing = true
+# ЛР4: добавьте порог покрытия fail_under
+
+[tool.ruff]
+line-length = 100
+target-version = "py313"
+# grader/ — код автопроверки, его линтер не проверяет
+extend-exclude = ["grader"]
+
+[tool.ruff.lint]
+# ЛР4: расширьте набор правил (см. lab-4)
+select = ["E", "F", "I", "UP"]

@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Заказ — Книжная лавка</title>
+  <link rel="stylesheet" href="/static/app.css">
+  <script src="/static/common.js" defer></script>
+  <script src="/static/order.js" defer></script>
+</head>
+<body>
+  <header class="top">
+    <h1>Заказ № <span data-testid="order-id">…</span></h1>
+    <p><a href="/">Вернуться в каталог</a></p>
+  </header>
+
+  <main>
+    <div id="error" class="error" role="alert" hidden></div>
+
+    <section id="order" class="card" aria-labelledby="status-title" hidden>
+      <h2 id="status-title" class="visually-hidden">Состояние заказа</h2>
+      <p aria-live="polite">Статус:
+        <strong class="status" data-testid="order-status"></strong>
+      </p>
+      <p class="muted" data-testid="customer"></p>
+
+      <div class="actions" data-testid="order-actions">
+        <button type="button" class="primary" data-action="pay" hidden>Оплатить</button>
+        <button type="button" class="primary" data-action="ship" hidden>Передать в доставку</button>
+        <button type="button" class="primary" data-action="deliver" hidden>Отметить доставку</button>
+        <button type="button" class="secondary" data-action="return" hidden>Оформить возврат</button>
+        <button type="button" class="danger" data-action="cancel" hidden>Отменить заказ</button>
+      </div>
+    </section>
+
+    <section class="card" aria-labelledby="lines-title" id="lines-card" hidden>
+      <h2 id="lines-title">Состав</h2>
+      <div class="table-wrap">
+        <table data-testid="order-lines">
+          <thead>
+            <tr>
+              <th scope="col">Книга</th>
+              <th scope="col" class="num">Цена</th>
+              <th scope="col" class="num">Кол-во</th>
+              <th scope="col" class="num">Сумма</th>
+            </tr>
+          </thead>
+          <tbody id="lines"></tbody>
+        </table>
+      </div>
+      <dl class="summary" data-testid="order-summary">
+        <dt>Сумма без скидки</dt><dd data-testid="subtotal"></dd>
+        <dt>Скидка</dt><dd data-testid="discount"></dd>
+        <dt>Доставка</dt><dd data-testid="delivery-cost"></dd>
+        <dt class="grand">К оплате</dt><dd class="grand" data-testid="total"></dd>
+      </dl>
+    </section>
+
+    <section class="card" aria-labelledby="history-title" id="history-card" hidden>
+      <h2 id="history-title">История</h2>
+      <ol class="history" data-testid="history"></ol>
+    </section>
+  </main>
+</body>
+</html>
